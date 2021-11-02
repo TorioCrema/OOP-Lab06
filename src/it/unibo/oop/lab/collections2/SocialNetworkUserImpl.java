@@ -1,7 +1,10 @@
 package it.unibo.oop.lab.collections2;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -29,7 +32,7 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
      * 
      * think of what type of keys and values would best suit the requirements
      */
-
+	private final Map<U, String> followedUsers;
     /*
      * [CONSTRUCTORS]
      * 
@@ -56,6 +59,11 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
      */
     public SocialNetworkUserImpl(final String name, final String surname, final String user, final int userAge) {
         super(name, surname, user, userAge);
+        this.followedUsers = new HashMap<U, String>();
+    }
+    
+    public SocialNetworkUserImpl(final String name, final String surname, final String user) {
+    	this(name, surname, user, -1);
     }
 
     /*
@@ -66,17 +74,35 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
 
     @Override
     public boolean addFollowedUser(final String circle, final U user) {
-        return false;
+        if (this.followedUsers.containsKey(user) == false) {
+        	this.followedUsers.put(user, circle);
+        	return true;
+        } else {
+        	return false;
+        }
     }
 
     @Override
     public Collection<U> getFollowedUsersInGroup(final String groupName) {
-        return null;
+    	final Collection<U> userColl = new ArrayList<U>();
+        if (this.followedUsers.containsValue(groupName) == true) {
+        	for (final var i : this.followedUsers.keySet()) {
+        		if (this.followedUsers.get(i) == groupName) {
+        			userColl.add(i);
+        		}
+        	}
+        	return userColl;
+        }
+        return userColl;
     }
 
     @Override
     public List<U> getFollowedUsers() {
-        return null;
+    	final List<U> userColl = new ArrayList<U>();
+    	for (final U i : this.followedUsers.keySet()) {
+    		userColl.add(i);
+    	}
+    	return userColl;
     }
 
 }
