@@ -55,7 +55,8 @@ public class RobotEnvironment {
             this.position.setY(newY);
             return true;
         } else {
-            return false;
+        	final PositionOutOfBoundException e = new PositionOutOfBoundException(newX, newY);
+            throw e;
         }
     }
 
