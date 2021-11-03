@@ -38,14 +38,15 @@ public final class BaseRobotTest {
          */
         for (int i = 0; i < RobotEnvironment.WORLD_X_UPPER_LIMIT; i++) {
             // check if position if coherent
-            assertTrue("[CHECKING MOVING RIGHT]", r1.moveRight());
+            r1.moveRight();
         }
         // reached the right limit of the world
         try {
-        	assertFalse("[CHECKING MOVING RIGHT]", r1.moveRight());
+        	r1.moveRight();
         	fail();
         } catch (PositionOutOfBoundException e) {
         	assertNotNull(e);
+        	assertFalse(e.getMessage().isEmpty());
         }
         // checking positions x=50; y=0
         assertEquals("[MOVING RIGHT ROBOT POS X]", RobotEnvironment.WORLD_X_UPPER_LIMIT, r1.getEnvironment().getCurrPosX());
@@ -55,14 +56,15 @@ public final class BaseRobotTest {
          */
         for (int i = 0; i < RobotEnvironment.WORLD_Y_UPPER_LIMIT; i++) {
             // check if position is coherent
-            assertTrue("[CHECKING MOVING UP]", r1.moveUp());
+            r1.moveUp();
         }
         // reached the upper limit of the world
         try {
-        	assertFalse("[CHECKING MOVING UP]", r1.moveUp());
+        	r1.moveUp();
         	fail();
         } catch (PositionOutOfBoundException e) {
         	assertNotNull(e);
+        	assertFalse(e.getMessage().isEmpty());
         }
         // checking positions x=50; y=80
         assertEquals("[MOVING RIGHT ROBOT POS X]", RobotEnvironment.WORLD_X_UPPER_LIMIT, r1.getEnvironment().getCurrPosX());
@@ -91,7 +93,13 @@ public final class BaseRobotTest {
         // verify position: same as start position
         assertEquals("[CHECKING ROBOT INIT POS Y]", 0, r2.getEnvironment().getCurrPosY());
         // out of world: returns false
-        assertFalse("[CHECKING MOVING UP]", r2.moveUp());
+        try {
+        	r2.moveUp();
+        	fail();
+        } catch (NotEnoughBatteryException e) {
+        	assertNotNull(e);
+        	assertFalse(e.getMessage().isEmpty());
+        }
         // recharge battery
         r2.recharge();
         // verify battery level
