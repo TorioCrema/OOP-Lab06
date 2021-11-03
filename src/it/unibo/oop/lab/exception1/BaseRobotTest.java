@@ -43,10 +43,10 @@ public final class BaseRobotTest {
         assertEquals("[MOVING RIGHT ROBOT POS X]", RobotEnvironment.WORLD_X_UPPER_LIMIT, r1.getEnvironment().getCurrPosX());
         assertEquals("[MOVING RIGHT ROBOT POS Y]", 0, r1.getEnvironment().getCurrPosY());
         /*
-         * 2) Move to the top until it reaches the upper right conrner of the world
+         * 2) Move to the top until it reaches the upper right corner of the world
          */
         for (int i = 0; i < RobotEnvironment.WORLD_Y_UPPER_LIMIT; i++) {
-            // check if position if coherent
+            // check if position is coherent
             assertTrue("[CHECKING MOVING UP]", r1.moveUp());
         }
         // reached the upper limit of the world
