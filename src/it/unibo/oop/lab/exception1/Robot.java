@@ -32,8 +32,8 @@ public class Robot {
 	 * 
 	 * @return If the Up movement has been performed
 	 */
-	public boolean moveUp() throws PositionOutOfBoundException {
-		return moveToPosition(environment.getCurrPosX(), this.environment.getCurrPosY() + Robot.MOVEMENT_DELTA);
+	public void moveUp() throws PositionOutOfBoundException, NotEnoughBatteryException{
+		moveToPosition(environment.getCurrPosX(), this.environment.getCurrPosY() + Robot.MOVEMENT_DELTA);
 	}
 
 	/**
@@ -41,8 +41,8 @@ public class Robot {
 	 * 
 	 * @return If the Down movement has been performed
 	 */
-	public boolean moveDown() throws PositionOutOfBoundException {
-		return this.moveToPosition(this.environment.getCurrPosX(), environment.getCurrPosY() - Robot.MOVEMENT_DELTA);
+	public void moveDown() throws PositionOutOfBoundException, NotEnoughBatteryException {
+		this.moveToPosition(this.environment.getCurrPosX(), environment.getCurrPosY() - Robot.MOVEMENT_DELTA);
 	}
 
 	/**
@@ -50,8 +50,8 @@ public class Robot {
 	 * 
 	 * @return A boolean indicating if the Left movement has been performed
 	 */
-	public boolean moveLeft() throws PositionOutOfBoundException {
-		return this.moveToPosition(this.environment.getCurrPosX() - Robot.MOVEMENT_DELTA,
+	public void moveLeft() throws PositionOutOfBoundException, NotEnoughBatteryException {
+		this.moveToPosition(this.environment.getCurrPosX() - Robot.MOVEMENT_DELTA,
 				this.environment.getCurrPosY());
 	}
 
@@ -60,8 +60,8 @@ public class Robot {
 	 * 
 	 * @return A boolean indicating if the Right movement has been performed
 	 */
-	public boolean moveRight() throws PositionOutOfBoundException {
-		return this.moveToPosition(this.environment.getCurrPosX() + Robot.MOVEMENT_DELTA,
+	public void moveRight() throws PositionOutOfBoundException, NotEnoughBatteryException {
+		this.moveToPosition(this.environment.getCurrPosX() + Robot.MOVEMENT_DELTA,
 				this.environment.getCurrPosY());
 	}
 
@@ -79,22 +79,19 @@ public class Robot {
 	 * @param newY the new Y position to move the robot to
 	 * @return true if robot gets moved, false otherwise
 	 */
-	private boolean moveToPosition(final int newX, final int newY) throws PositionOutOfBoundException {
-		boolean returnValue = true;
+	private void moveToPosition(final int newX, final int newY) throws PositionOutOfBoundException, NotEnoughBatteryException {
 		if (this.isBatteryEnoughToMove()) {
 			if (this.environment.move(newX, newY)) {
 				this.consumeBatteryForMovement();
 				this.log("Moved to position(" + newX + "," + newY + ").");
 			} else {
-				this.log("Can not move to (" + newX + "," + newY
-						+ ") the robot is touching at least one world boundary");
-				returnValue = false;
+				final PositionOutOfBoundException e = new PositionOutOfBoundException(newX, newY);
+				throw e;
 			}
 		} else {
-			this.log("Can not move to position(" + newX + "," + newY + "). Not enough battery.");
-			returnValue = false;
+			final NotEnoughBatteryException e = new NotEnoughBatteryException(this.batteryLevel, MOVEMENT_DELTA_CONSUMPTION);
+			throw e;
 		}
-		return returnValue;
 	}
 
 	/**
