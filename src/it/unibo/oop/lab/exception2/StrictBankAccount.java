@@ -50,9 +50,14 @@ public class StrictBankAccount implements BankAccount {
      * {@inheritDoc}
      */
     public void withdraw(final int usrID, final double amount) {
-        if (checkUser(usrID) && isWithdrawAllowed(amount)) {
-            this.balance -= amount;
-            increaseTransactionsCount();
+        if (checkUser(usrID)) {
+            if (this.isWithdrawAllowed(amount)) {
+            	this.balance -= amount;
+                increaseTransactionsCount();
+            } else {
+            	final NotEnoughFoundsException e = new NotEnoughFoundsException(this.balance, amount);
+            	throw e;
+            }
         } else {
         	final WrongAccountHolderException e = new WrongAccountHolderException(usrID);
         	throw e;
@@ -103,9 +108,14 @@ public class StrictBankAccount implements BankAccount {
      */
     public void computeManagementFees(final int usrID) {
         final double feeAmount = MANAGEMENT_FEE + (totalTransactionCount * StrictBankAccount.TRANSACTION_FEE);
-        if (checkUser(usrID) && isWithdrawAllowed(feeAmount)) {
-            balance -= MANAGEMENT_FEE + totalTransactionCount * StrictBankAccount.TRANSACTION_FEE;
-            totalTransactionCount = 0;
+        if (checkUser(usrID)) {
+        	if (this.isWithdrawAllowed(feeAmount)) {
+                balance -= MANAGEMENT_FEE + totalTransactionCount * StrictBankAccount.TRANSACTION_FEE;
+                totalTransactionCount = 0;
+        	} else {
+        		final NotEnoughFoundsException e = new NotEnoughFoundsException(this.balance, feeAmount);
+        		throw e;
+        	}
         } else {
         	final WrongAccountHolderException e = new WrongAccountHolderException(usrID);
         	throw e;
