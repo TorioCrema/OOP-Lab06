@@ -39,6 +39,9 @@ public class StrictBankAccount implements BankAccount {
         if (checkUser(usrID)) {
             this.balance += amount;
             increaseTransactionsCount();
+        } else {
+        	final WrongAccountHolderException e = new WrongAccountHolderException(usrID);
+        	throw e;
         }
     }
 
@@ -50,6 +53,9 @@ public class StrictBankAccount implements BankAccount {
         if (checkUser(usrID) && isWithdrawAllowed(amount)) {
             this.balance -= amount;
             increaseTransactionsCount();
+        } else {
+        	final WrongAccountHolderException e = new WrongAccountHolderException(usrID);
+        	throw e;
         }
     }
 
@@ -100,6 +106,9 @@ public class StrictBankAccount implements BankAccount {
         if (checkUser(usrID) && isWithdrawAllowed(feeAmount)) {
             balance -= MANAGEMENT_FEE + totalTransactionCount * StrictBankAccount.TRANSACTION_FEE;
             totalTransactionCount = 0;
+        } else {
+        	final WrongAccountHolderException e = new WrongAccountHolderException(usrID);
+        	throw e;
         }
     }
 
