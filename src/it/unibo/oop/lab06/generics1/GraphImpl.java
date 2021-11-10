@@ -2,6 +2,7 @@ package it.unibo.oop.lab06.generics1;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
@@ -71,7 +72,7 @@ public class GraphImpl<N> implements Graph<N> {
 		this.p[source] = -1;
 		Q.add(source);
 		
-		//bfs exploration of current graph
+		//bfs exploration of current graph starting from source
 		while(!Q.isEmpty()) {
 			int u = Q.poll();
 			for (N i : this.edges.get(u)) {
@@ -96,6 +97,7 @@ public class GraphImpl<N> implements Graph<N> {
 			path.add(this.nodes.get(father));
 			father = this.p[father];
 		}
+		Collections.reverse(path);
 		return path;
 	}
 	
